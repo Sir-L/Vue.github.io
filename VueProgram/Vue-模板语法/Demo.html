@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../vue.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="../my.css" rel="stylesheet" type="text/css" />
+    <title>模板语法</title>
+</head>
+
+<body>
+    <div class="block">
+        <div class="showMsg">
+            <h3>文本</h3>
+            <div class="app1">
+                基础插入值：{{data1}}<br />
+                使用v-once后:<span v-once>{{data1}}</span><br />
+                <button v-on:click="data1='Change'">点击我修改数据源</button>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app1",
+                    data: {
+                        data1: "Hello Vue"
+                    }
+                })
+            </script>
+            <!-- v-once可以保证数据源发生改变时内容不变 -->
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>原始HTML</h3>
+            <div class="app2">
+                基础插入值：{{data2}}<br />
+                v-html:<span v-html='data2'></span>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app2",
+                    data: {
+                        data2: '<span style="color:red">这是HTML文本</span>'
+                    }
+                })
+            </script>
+            <!-- 不要用于局部复合模板，因为Vue不是针对字符串的模板引擎，而且只能使用可信任的内容，不能用作用户个人信息，易受XSS攻击 -->
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>Attribute</h3>
+            <div class="app3">
+                用v-bind修改HTML的Attribute(此时Type类型为text):<input v-bind:type="type" />
+            </div>
+            <script>
+                new Vue({
+                    el: ".app3",
+                    data: {
+                        el: ".app5",
+                        data: {
+                            type: "text"
+                        }
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>使用 JavaScript 表达式</h3>
+            <div class="app4">
+                JS获取当前时间:{{new Date()}}
+            </div>
+            <script>
+                new Vue({
+                    el: ".app4",
+                    data: {
+
+                    }
+                })
+            </script>
+            <!-- Vue只能访问全局变量，无法访问用户自己创建的全局变量，任何地方都可以用JS，包括v-bind -->
+        </div>
+    </div>
+    <h3>指令：</h3>
+    <p>指令 (Directives) 是带有 v- 前缀的特殊 attribute。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。</p>
+    <div class="block">
+        <div class="showMsg">
+            <h3>参数</h3>
+            <div class="app5">
+                <p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。</p>
+                <p>v-bind 指令可以用于响应式地更新 HTML Attribute</p>
+                v-bind:<input v-bind:type="type" />
+                <p>v-on 指令，它用于监听 DOM 事件</p>
+                v-on:<span v-on:click="click">点击我</span>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app5",
+                    data: {
+                        type: "text"
+                    },
+                    methods: {
+                        click: function () {
+                            alert("你点击了")
+                        }
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>动态参数</h3>
+            <div class="app6">
+                <p>{{data6}}:用方括号括起来的 JavaScript 表达式作为一个指令的参数</p>
+                <a v-bind:[type]="url">动态参数生成的连接</a>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app6",
+                    data: {
+                        data6: '<a v-bind:[attributeName]="url"> ... </a>',
+                        type: 'href',
+                        url: 'https://www.baidu.com'
+                    }
+                })
+            </script>
+            <!-- 2.6.0新增，如果指令的参数为null，则会显性移除，并且参数不能有空格和引号，若是为大写则强行变成小写 -->
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>修饰符</h3>
+            <a href="https://www.jianshu.com/p/55b598cc43cd">修饰符大全</a>
+            <div class="app7">
+                <div v-on:click="divClick">
+                    <p>以半角句号 . 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定</p>
+                    <button v-on:click.stop="btnClick">点击我</button>
+                </div>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app7",
+                    data: {
+
+                    },
+                    methods: {
+                        btnClick: function () {
+                            alert('点击了btn');
+                        },
+                        divClick: function () {
+                            alert('点击了div')
+                        }
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>缩写</h3>
+            <div class="app8">
+                <p>:为v-bind的缩写，@为v-on的缩写</p>
+                <input :type='type' :value='data8' @click='click'/>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app8",
+                    data: {
+                        type:'button',
+                        data8:'点击我'
+                    },
+                    methods:{
+                        click:function(){
+                            alert("点击了");
+                        }
+                    }
+                })
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../vue.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="../my.css" rel="stylesheet" type="text/css" />
+    <title>列表渲染</title>
+</head>
+
+<body>
+    <div class="block">
+        <div class="showMsg">
+            <h3>v-for与数组</h3>
+            <div class="app1">
+                <ul>
+                    <li v-for="(item,index) in items">
+                        {{title}}{{index}}:{{item.message}}
+                    </li>
+                </ul>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app1",
+                    data: {
+                        title: "数据",
+                        items: [
+                            { message: "aa" },
+                            { message: "bb" },
+                            { message: "cc" },
+                            { message: "dd" },
+                        ]
+                    }
+                })
+            </script>
+            <!-- 可用of替代in，效果完全相同 -->
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>v-for与对象</h3>
+            <div class="app2">
+                <ul>
+                    <li v-for="(value,name,index) in object">
+                        {{index}}-{{name}}:{{value}}
+                    </li>
+                </ul>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app2",
+                    data: {
+                        object: {
+                            title: "Title",
+                            content: "Content"
+                        }
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>v-for与维护状态</h3>
+            <div class="app3">
+
+            </div>
+            <script>
+                new Vue({
+                    el: ".app3",
+                    data: {
+
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <h2>v-for与数组更新检测</h2>
+        <a href="https://blog.csdn.net/qq_35192741/article/details/80655464">变更数组和替换数组</a>
+        <div class="showMsg">
+            <h3>v-for与变更数组</h3>
+            <div class="app4">
+                <button @click="items.push({ message: 5 })">push</button>
+                <button @click="items.pop()">pop</button>
+                <button @click="items.shift()">shift</button>
+                <button @click="items.unshift({ message: 5 })">unshift</button>
+                <button @click="items.splice(message,1)">splice</button>
+                <button @click="items.sort((a,b)=>{return a.message>b.message})">sort</button>
+                <button @click="items.reverse()">reverse</button>
+                <ul>
+                    <li v-for="(item,index) in items" :key="item.message">
+                        {{index}}:{{item.message}}
+                    </li>
+                </ul>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app4",
+                    data: {
+                        items: [
+                            { message: 2 },
+                            { message: 3 },
+                            { message: 1 },
+                            { message: 4 },
+                        ]
+                    }
+                })
+            </script>
+            <!-- push底部添加，pop底部删除，shift顶部删除，unshift顶部添加，splice(k,v)指定删除，splice（）全部删除
+                reverse反转 -->
+        </div>
+        <div class="showMsg">
+            <h3>v-for与替换数组</h3>
+            <div class="app5">
+                <button @click="items.push({message:index++})">添加数值</button>
+                <h4>初始数组</h4>
+                <ul>
+                    <li v-for="(item,index) in items" :key="item.message">
+                        {{index}}:{{item.message}}
+                    </li>
+                </ul>
+                <h4>methods方式过滤（filter）</h4>
+                <ul>
+                    <li v-for="(item,index) in filter(items)" :key="item.message">
+                        {{index}}:{{item.message}}
+                    </li>
+                </ul>
+                <h4>computed方式过滤（filter）</h4>
+                <ul>
+                    <li v-for="(item,index) in filternums" :key="item.message">
+                        {{index}}:{{item.message}}
+                    </li>
+                </ul>
+                <h4>concat合并数组</h4>
+                <ul>
+                    <li v-for="(item,index) in items.concat(items2)" :key="item.message">
+                        {{index}}:{{item.message}}
+                    </li>
+                </ul>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app5",
+                    data: {
+                        index: 5,
+                        items: [
+                            { message: 2 },
+                            { message: 3 },
+                            { message: 1 },
+                            { message: 4 },
+                        ],
+                        items2: [
+                            { message: -1 },
+                            { message: -3 },
+                            { message: -4 },
+                            { message: -2 },
+                        ]
+                    },
+                    methods: {
+                        filter: function (nums) {
+                            return nums.filter(function (num) {
+                                return num.message % 2 == 0
+                            })
+                        }
+                    },
+                    computed: {
+                        filternums: function () {
+                            return this.items.filter(function (num) {
+                                return num.message % 2 == 0
+                            })
+                        }
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>v-for与值范围</h3>
+            <div class="app6">
+                <ul>
+                    <li v-for="num in 6">
+                        {{num}}
+                    </li>
+                </ul>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app6",
+                    data: {
+
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>v-for与template模板</h3>
+            <div class="app7">
+                <ul>
+                    <template v-for="num in 6">
+                        <li>{{num}}</li>
+                        <p>模板内容</p>
+                    </template>
+                </ul>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app7",
+                    data: {
+
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>v-for与v-if</h3>
+            <p>请查看代码</p>
+            <!-- v-for的优先级比v-if高，意味着
+                如果是循环时有条件的渲染子项内容，则放在一起用
+                如果时有条件的进行循环，这需要把v-if放在v-for的外面 -->
+        </div>
+    </div>
+</body>
+
+</html>

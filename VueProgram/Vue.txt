@@ -1,0 +1,16 @@
+组件
+    Vue.component()注册组件
+        位置:
+            全局组件
+            局部组件
+        组件名称:
+            kebab-case和PascalCase
+        组件属性Prop:
+            Prop名称:
+                kebab-case
+            Prop值:
+                值本质上是JS表达式
+                可合并
+            Prop类型:
+                可以为Prop指定类型，并还可以添加认证，还可以设置默认值
+            

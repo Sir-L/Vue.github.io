@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue-计算属性和侦听器</title>
+    <script src="../vue.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="../my.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="block">
+        <div class="showMsg">
+            <h3>计算属性</h3>
+            <div class="app1">
+                <input type="text" v-model="data1" @change='change' /><br />
+                reverseddata1:{{reverseddata1}}
+            </div>
+            <script>
+                new Vue({
+                    el: ".app1",
+                    data: {
+                        data1: 'Hello Vue'
+                    },
+                    methods: {
+                        change: function () {
+                            data1 = this.val()
+                        }
+                    },
+                    computed: {
+                        reverseddata1: function () {
+                            return this.data1.split('').reverse().join('')
+                        }
+                    }
+                })
+            </script>
+            <!-- 之所以不在页面内通过{{data1.split('').reverse().join('')}}方式修改JS来实现文字反转，
+                    是因为尽量让运算与模板分开有利于浏览与维护修改 -->
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>计算属性缓存 vs 方法</h3>
+            <div class="app2">
+                <input type="text" v-model="data2" @change='change' /><br />
+                reverseddata2:{{reverseddata2()}}
+            </div>
+            <script>
+                new Vue({
+                    el: ".app2",
+                    data: {
+                        data2: "Hello Vue"
+                    },
+                    methods: {
+                        change: function () {
+                            data1 = this.val()
+                        },
+                        reverseddata2: function () {
+                            return this.data2.split('').reverse().join('')
+                        }
+                    }
+                })
+            </script>
+            <!-- 虽然在methods中也可以实现文字反转，但它与computed的区别在于：
+                computed进行缓存的。只在相关响应式依赖发生改变时它们才会重新求值,访问会立即提供结果
+                而methods没有缓存功能，访问会重新计算。
+                所以若是想用缓存功能，computed，若是不想，用methods -->
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>计算属性 vs 侦听属性</h3>
+            <div class="app3_app4">
+                <div class="app3">
+                    firstName:<input type="text" v-model="firstName" @change='firstName="this.val()"' /><br />
+                    lastName:<input type="text" v-model="lastName" @change='lastName="this.val()"' /><br />
+                    fullName:{{fullName}}
+                </div>
+                <div class="app4">
+                    firstName:<input type="text" v-model="firstName" @change='firstName="this.val()"' /><br />
+                    lastName:<input type="text" v-model="lastName" @change='lastName="this.val()"' /><br />
+                    fullName:{{fullName}}
+                </div>
+            </div>
+            <script>
+                new Vue({
+                    el: '.app3',
+                    data: {
+                        firstName: 'Foo',
+                        lastName: 'Bar',
+                        fullName: 'Foo Bar'
+                    },
+                    watch: {
+                        firstName: function (val) {
+                            this.fullName = val + ' ' + this.lastName
+                        },
+                        lastName: function (val) {
+                            this.fullName = this.firstName + ' ' + val
+                        }
+                    }
+                })
+                new Vue({
+                    el: '.app4',
+                    data: {
+                        firstName: 'Foo',
+                        lastName: 'Bar'
+                    },
+                    computed: {
+                        fullName: function () {
+                            return this.firstName + ' ' + this.lastName
+                        }
+                    }
+                })
+            </script>
+            <!-- computed大大的简化了watch监听过程，但watch的存在，是因为可以自定义的侦听器，一个更通用的方法响应监听 -->
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>计算属性的 setter</h3>
+            <div class="app5">
+                fullName:<input type="text" v-model="fullName" @change='change' /><br />
+                firstName:{{firstName}}<br/>
+                lastName:{{lastName}}
+            </div>
+            <script>
+                new Vue({
+                    el: '.app5',
+                    data: {
+                        firstName: 'Foo',
+                        lastName: 'Bar'
+                    },
+                    methods: {
+                        change: function () {
+                            fullName=this.val();
+                        }
+                    },
+                    computed: {
+                        fullName: {
+                            // getter
+                            get: function () {
+                                return this.firstName + ' ' + this.lastName
+                            },
+                            // setter
+                            set: function (newValue) {
+                                var names = newValue.split(' ')
+                                this.firstName = names[0]
+                                this.lastName = names[names.length - 1]
+                            }
+                        }
+                    }
+                })
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../vue.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="../my.css" rel="stylesheet" type="text/css" />
+    <title>组件基础</title>
+</head>
+
+<body>
+    <div class="block">
+        <div class="showMsg">
+            <h2>组件的基本事例</h2>
+            <div class="app1">
+                <h3>全局组件&组件复用</h3>
+                <div class="app2">
+                    mybtn1:<mybtn></mybtn>
+                    mybtn1:<mybtn></mybtn>
+                    mybtn2(因为是局部的，所以不显示):<mybtn2></mybtn2>
+                </div>
+                <h3>局部组件</h3>
+                <div class="app3">
+                    mybtn1:<mybtn></mybtn>
+                    mybtn2:<mybtn2></mybtn2>
+                </div>
+            </div>
+            <script>
+                Vue.component('mybtn', {
+                    data: function () {
+                        return {
+                            count: 0
+                        }
+                    },
+                    template: "<button @click='count++'>单次增加，点击次数：{{count}}</button>"
+                })
+                new Vue({
+                    el: ".app1",
+                    data: {
+
+                    }
+                })
+                new Vue({
+                    el: ".app3",
+                    data: {
+
+                    },
+                    components: {
+                        'mybtn2': {
+                            data: function () {
+                                return {
+                                    count: 0
+                                }
+                            },
+                            template: "<button @click='count+=2'>双次增加，点击次数：{{count}}</button>"
+                        }
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h2>通过Prop向子组件传递数据</h2>
+            <h3>传递方式一</h3>
+            <div class="app4">
+                <mymessage :title='title' :name='name' :sex='sex'></mymessage>
+            </div>
+            <script>
+                Vue.component('mymessage', {
+                    props: ['title', 'name', 'sex'],
+                    template: "<div><p>标题:{{title}}</p><p>姓名:{{name}}</p><p>性别:{{sex}}</p></div>"
+                })
+                new Vue({
+                    el: ".app4",
+                    data: {
+                        title: "我的个人信息",
+                        name: '刘凯',
+                        sex: '男'
+                    }
+                })
+            </script>
+            <h3>传递方式二</h3>
+            <div class="app5">
+                <mymessage :title='title' :prop='propitem' v-for="propitem in prop"></mymessage>
+            </div>
+            <script>
+                Vue.component('mymessage', {
+                    props: ['title', 'prop'],
+                    template: "<div><p>标题:{{title}}</p><p>姓名:{{prop.name}}</p><p>性别:{{prop.sex}}</p></div>"
+                })
+                new Vue({
+                    el: ".app5",
+                    data: {
+                        title: '我的个人信息',
+                        prop: [
+                            { name: '刘凯', sex: '男' },
+                            { name: '刘凯2', sex: '男' },
+                            { name: '刘凯3', sex: '男' }
+                        ]
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h2>监听子组件事件</h2>
+            <div class="app6">
+                <div :style="{fontSize:fontsize+'em'}">
+                    <mybtn :prop="prop" v-for="prop in props" @myclick="fontsize+=0.1"></mybtn>
+                </div>
+            </div>
+            <script>
+                Vue.component('mybtn', {
+                    props: ["prop"],
+                    template: '<div class="mybtn"><h3>{{prop.title}}</h3><button @click="$emit(\'myclick\')">Enlarge text</button><div v-html="prop.content"></div></div>'
+                })
+                new Vue({
+                    el: ".app6",
+                    data: {
+                        props: [{ id: 1, title: "标题", content: "内容" }],
+                        fontsize: 1
+                    }
+                })
+            </script>
+            <h3>使用事件抛出一个值</h3>
+            <div class="app7">
+                <div :style="{fontSize:fontsize+'em'}">
+                    <mybtn :prop="prop" v-for="prop in props" @myclick="fontsize+=$event"></mybtn>
+                </div>
+            </div>
+            <script>
+                Vue.component('mybtn', {
+                    props: ["prop"],
+                    template: '<div class="mybtn"><h3>{{prop.title}}</h3><button @click="$emit(\'myclick\',0.2)">Enlarge text</button><div v-html="prop.content"></div></div>'
+                })
+                new Vue({
+                    el: ".app7",
+                    data: {
+                        props: [{ id: 1, title: "标题", content: "内容" }],
+                        fontsize: 1
+                    }
+                })
+            </script>
+            <!-- methods: {
+                    onEnlargeText: function (enlargeAmount) {
+                                        this.postFontSize += enlargeAmount
+                                    }
+                    }或者也可以绑定事件 -->
+        </div>
+        <div class="showMsg">
+            <h2>组件上使用v-model</h2>
+            <div class="app8">
+                <myinput v-model="text"></myinput>
+                text:{{text}}
+            </div>
+            <script>
+                Vue.component('myinput', {
+                    props: ["value"],
+                    template: '<input :value="value" @input="$emit(\'input\',$event.target.value)"/>'
+                })
+                new Vue({
+                    el: ".app8",
+                    data: {
+                        text: ""
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h2>插槽</h2>
+            <div class="app9">
+                <mydiv>错误信息</mydiv>
+            </div>
+            <script>
+                Vue.component('mydiv', {
+                    template: '<div class="mydiv"><strong>Error!</strong><slot></slot></div>'
+                })
+                new Vue({
+                    el: ".app9",
+                    data: {}
+                })
+            </script>
+            <!-- slot的内容为"错误信息" -->
+        </div>
+        <div class="showMsg">
+            <h2>动态组件</h2>
+            <div class="app10">
+                <button v-for="tab in tabs" v-on:click="currentTab = tab">
+                    {{ tab }}
+                </button>
+                <component v-bind:is="currentTabComponent"></component>
+            </div>
+            <script>
+                Vue.component("tab-home", {
+                    template: "<div>Home component</div>"
+                });
+                Vue.component("tab-posts", {
+                    template: "<div>Posts component</div>"
+                });
+                Vue.component("tab-archive", {
+                    template: "<div>Archive component</div>"
+                });
+
+                new Vue({
+                    el: ".app10",
+                    data: {
+                        currentTab: "Home",
+                        tabs: ["Home", "Posts", "Archive"]
+                    },
+                    computed: {
+                        currentTabComponent: function () {
+                            return "tab-" + this.currentTab.toLowerCase();
+                        }
+                    }
+                });
+            </script>
+        </div>
+        <div class="showMsg">
+            <h2>解析Dom模板注意事项</h2>
+            <div class="app11">
+                <table>
+                    <tr is="mytr" v-for="num in 5" :num="num"></tr>
+                </table>
+            </div>
+            <script>
+                Vue.component('mytr', {
+                    props: ['num'],
+                    template: "<tr><td>{{num}}行数据</td></tr>"
+                })
+                new Vue({
+                    el: ".app11",
+                    data: {
+
+                    }
+                })
+            </script>
+            <!-- 诸如 <ul>、<ol>、<table> 和 <select>,出现在其内部是有严格限制的
+                <table>
+                    <blog-post-row></blog-post-row>
+                </table>会出现问题
+                所以用is属性
+            
+                字符串 (例如：template: '...')
+                单文件组件 (.vue)
+                <script type="text/x-template"> 是没有问题的-->
+        </div>
+    </div>
+</body>
+
+</html>

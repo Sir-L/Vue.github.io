@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../vue.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="../my.css" rel="stylesheet" type="text/css" />
+    <title>表单元素绑定</title>
+</head>
+
+<body>
+    <div class="block">
+        <div class="showMsg">
+            <h3>基础用法</h3>
+            <div class="app1">
+                <h5>text</h5>
+                <input type="text" v-model="text">
+                <p>text:{{text}}</p>
+                <h5>textarea</h5>
+                <textarea cols="9" rows="3" v-model="textarea"></textarea>
+                <p>textarea:{{textarea}}</p>
+                <h5>checkbox</h5>
+                <input type="checkbox" v-model="checkbox">{{checkbox}}
+                <h5>checkboxes</h5>
+                <input type="checkbox" v-model="checkboxes" value="1">1
+                <input type="checkbox" v-model="checkboxes" value="2">2
+                <input type="checkbox" v-model="checkboxes" value="3">3
+                <p>checkboxes:{{checkboxes}}</p>
+                <h5>radio</h5>
+                <input type="radio" v-model="radio" value="1">1
+                <input type="radio" v-model="radio" value="2">2
+                <p>radio:{{radio}}</p>
+                <h5>select</h5>
+                <select v-model="select">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </select>
+                <p>select:{{select}}</p>
+                <h5>selects</h5>
+                <select v-model="selects" multiple>
+                    <option v-for="option in options" :value="option.value">
+                        {{option.text}}
+                    </option>
+                </select>
+                <p>{{selects}}</p>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app1",
+                    data: {
+                        text: "",
+                        textarea: "",
+                        checkbox: false,
+                        checkboxes: [],
+                        radio: "",
+                        select: "",
+                        selects: [],
+                        options: [
+                            { text: '1', value: '1' },
+                            { text: '2', value: '2' },
+                            { text: '3', value: '3' }
+                        ]
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>值绑定</h3>
+            <div class="app2">
+                <h5>复选框</h5>
+                <input type="checkbox" v-model="checkbox" true-value="选中" false-value="未选中" />点击我
+                <p>checkbox:{{checkbox}}</p>
+                <h5>单选按钮</h5>
+                <input type="radio" v-model="radio" :value="radiomsg1" />点击我
+                <input type="radio" v-model="radio" :value="radiomsg2" />点击我
+                <p>radio:{{radio}}</p>
+                <h5>选择框</h5>
+                <select v-model="selected">
+                    <option :value="{ number: 123 }">123</option>
+                </select>
+                <p>select:{{selected.number}}</p>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app2",
+                    data: {
+                        checkbox: "",
+                        radio: "",
+                        radiomsg1: "1",
+                        radiomsg2: "2",
+                        selected: ""
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>修饰符</h3>
+            <div class="app3">
+                <h5>.lazy change时更新数据</h5>
+                <input type="text" v-model.lazy="text1"/>
+                <p>text1 change时候更新:{{text1}}</p>
+                <h5>.number 字符串转数值</h5>
+                <input type="text" v-model.number="text2" type="number"/>
+                <p>text2:{{text2}}</p>
+                <!-- 如果这个值无法被 parseFloat() 解析，则会返回原始的值，否则转为数值类型 -->
+                <h5>.trim 过滤空格</h5>
+                <input type="text" v-model.trim="text3"/>
+                <p>text3:{{text3}}</p>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app3",
+                    data: {
+                        text1: "",
+                        text2:"",
+                        text3:""
+                    }
+                })
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>

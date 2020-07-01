@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../vue.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="../my.css" rel="stylesheet" type="text/css" />
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="block">
+        <div class="showMsg">
+            <h3>事件处理方法</h3>
+            <div class="app1">
+                <button @click="count++">点击我</button>
+                <p>数字{{count}}</p>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app1",
+                    data: {
+                        count: 0
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>事件处理方法</h3>
+            <div class="app2">
+                <button @click="click('Hi')">Say Hi</button>
+                <button @click="click('Hello')">Say Hello</button>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app2",
+                    data: {
+
+                    },
+                    methods: {
+                        click: function (msg) {
+                            alert(msg)
+                        }
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <div class="showMsg">
+            <h3>事件修饰符</h3>
+            <div class="app3">
+                <p>先是子元素再是父元素</p>
+                <div @click="click1">
+                    <button @click="click2">普通按钮</button>
+                </div>
+                <p>只有子元素click</p>
+                <div @click="click1">
+                    <button @click.stop="click2">stop</button>
+                </div>
+                <p>先是父元素再是子元素</p>
+                <div @click.capture="click1">
+                    <button @click="click2">capture</button>
+                </div>
+                <p>只有event是自身触发才会有，所以button有，div没有</p>
+                <div @click.self="click1">
+                    <button @click="click2">self</button>
+                </div>
+                <p>会刷新</p>
+                <a href="Demo.html" @click="click2">普通链接</a>
+                <p>不会刷新</p>
+                <a href="Demo.html" @click.prevent="click2">prevent</a>
+                <p>只会触发一次，2.1.4新增</p>
+                <button @click.once="click2">普通按钮</button>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app3",
+                    data: {
+
+                    },
+                    methods: {
+                        click1: function () {
+                            alert("这是父元素")
+                        },
+                        click2: function () {
+                            alert('这是子元素')
+                        }
+                    }
+                })
+            </script>
+            <!-- 使用修饰符时，顺序很重要；相应的代码会以同样的顺序产生。
+                因此，用 v-on:click.prevent.self 会阻止所有的点击，
+                而 v-on:click.self.prevent 只会阻止对元素自身的点击。 -->
+            <!--.passive 2.3.0新增 ,用于滚动刷新
+                    不要把 .passive 和 .prevent 一起使用，
+                    因为 .prevent 将会被忽略，同时浏览器可能会向你展示一个警告。
+                    请记住，.passive 会告诉浏览器你不想阻止事件的默认行为 -->
+        </div>
+        <div class="showMsg">
+            <h3>按键修饰符</h3>
+            <div class="app4">
+                <p>按键修饰符</p>
+                <button @keyup.enter="enter" @keyup.tab="tab" @keyup.delete="delete" @keyup.esc="esc"
+                    @keyup.space="space" @keyup.up="up" @keyup.down="down" @keyup.left="left"
+                    @keyup.right="right">enter、tab、delete、esc、space、up、down、left、right</button>
+                <p>按键码</p>
+                <button @keyup.13="enter">enter:13</button>
+                <p>系统修饰符（shift、ctrl、meta、alt）与组合键实例</p>
+                <button @keyup.shift.A="shiftA">shift+A</button>
+                <p>exact修饰符2.5.0新增</p>
+                <p>即使 Alt 或 Shift 被一同按下时也会触发</p>
+                <button v-on:click.ctrl="ctrl">ctrl</button>
+
+                <p>有且只有 Ctrl 被按下的时候才触发</p>
+                <button v-on:click.ctrl.exact="ctrl">ctrl</button>
+
+                <p>没有任何系统修饰符被按下的时候才触发</p>
+                <button v-on:click.exact="ctrl">ctrl</button>
+                <p>鼠标按钮修饰符</p>
+                <button @click.left="left" @right="right" @middle="middle">left、right、middle</button>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app4",
+                    data: {
+
+                    },
+                    methods: {
+                        enter: function () {
+                            alert("enter")
+                        },
+                        tab: function () {
+                            alert("tab")
+                        },
+                        delete: function () {
+                            alert("delete")
+                        },
+                        esc: function () {
+                            alert("esc")
+                        },
+                        space: function () {
+                            alert("space")
+                        },
+                        up: function () {
+                            alert("up")
+                        },
+                        down: function () {
+                            alert("down")
+                        },
+                        left: function () {
+                            alert("left")
+                        },
+                        right: function () {
+                            alert("right")
+                        },
+                        shiftA: function () {
+                            alert("shift+A")
+                        },
+                        ctrl: function () {
+                            alert("ctrl")
+                        },
+                        left: function () {
+                            alert("left")
+                        },
+                        right: function () {
+                            alert("right")
+                        },
+                        middle: function () {
+                            alert("middle")
+                        },
+                    }
+                })
+            </script>
+            <!-- 可以自定义按键码：如F1：Vue.config.keyCodes.f1 = 112 -->
+        </div>
+    </div>
+</body>
+
+</html>

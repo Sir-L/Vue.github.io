@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue-Class与Style绑定</title>
+    <script src="../vue.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="../my.css" rel="stylesheet" type="text/css" />
+    <style>
+        .active {
+            color: blue;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .activebg {
+            background-color: red;
+        }
+
+        .errorbg {
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="block">
+        <h2>绑定Class</h2>
+        <div class="showMsg">
+            <h3>对象语法-内联式</h3>
+            <div class="app1">
+                <button @click="isactive=!isactive;iserror=!iserror">点击我</button><br />
+                <span v-bind:class="{active:isactive,error:iserror}">这里是文字</span>
+            </div>
+            <script>
+                new Vue({
+                    el: '.app1',
+                    data: {
+                        isactive: true,
+                        iserror: false
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>对象语法-非内联式</h3>
+            <div class="app2">
+                <button @click="spancss.active=!spancss.active;spancss.error=!spancss.error">点击我</button><br />
+                <span v-bind:class="spancss">这里是文字</span>
+            </div>
+            <script>
+                new Vue({
+                    el: '.app2',
+                    data: {
+                        spancss: {
+                            active: true,
+                            error: false
+                        }
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>对象语法-计算属性</h3>
+            <div class="app3">
+                <button @click="isactive=!isactive;iserror=!iserror">点击我</button><br />
+                <span v-bind:class="spancss">这里是文字</span>
+            </div>
+            <script>
+                new Vue({
+                    el: '.app3',
+                    data: {
+                        isactive: true,
+                        iserror: false
+                    },
+                    computed: {
+                        spancss: function () {
+                            return {
+                                active: this.isactive,
+                                error: this.iserror
+                            }
+                        }
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>数组语法-基础</h3>
+            <div class="app4">
+                <button @click="isactive=!isactive;iserror=!iserror">点击我</button><br />
+                <span v-bind:class="[isactive?activeclass:'',iserror?errorclass:'']">这里是文字</span>
+            </div>
+            <script>
+                new Vue({
+                    el: '.app4',
+                    data: {
+                        isactive: true,
+                        iserror: false,
+                        activeclass: 'active activebg',
+                        errorclass: 'error errorbg'
+                    }
+                })
+            </script>
+            <!-- 可用三元表达式，而且数组语法可以穿插对象语法 -->
+        </div>
+        <div class="showMsg">
+            <h3>自定义组件</h3>
+            <div class="app5">
+                <myp v-bind:class='{activebg:true}'></myp>
+            </div>
+            <script>
+                Vue.component('myp', {
+                    template: '<p class="active">这是文本</p>'
+                })
+                new Vue({
+                    el: '.app5',
+                    data: {}
+                })
+            </script>
+        </div>
+    </div>
+    <div class="block">
+        <h2>绑定内联样式</h2>
+        <div class="showMsg">
+            <h3>对象语法</h3>
+            <div class="app6">
+                <button @click="isactive=!isactive">点击我</button><br />
+                <div v-bind:style="{color:color,backgroundColor:backgroundColor}">文字</div>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app6",
+                    data: {
+                        isactive: true,
+                        backgroundColor: "blue"
+                    },
+                    computed: {
+                        color: function () {
+                            return this.isactive ? "red" : "white"
+                        }
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>数组语法</h3>
+            <div class="app7">
+                <div :style="[mystyle]">文字</div>
+            </div>
+            <script>
+                new Vue({
+                    el: '.app7',
+                    data: {
+                        mystyle: {
+                            color:'red',
+                            backgroundColor:'blue'
+                        }
+                    }
+                })
+            </script>
+        </div>
+        <!-- 自动添加前缀 -->
+        <!-- 从2.3.0开始，支持多重值，如：<div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }"></div> -->
+    </div>
+</body>
+
+</html>

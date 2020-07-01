@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../vue.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="../my.css" rel="stylesheet" type="text/css" />
+    <title>条件渲染</title>
+</head>
+
+<body>
+    <h2>v-if</h2>
+    <div class="block">
+        <div class="showMsg">
+            <h3>v-if与v-else</h3>
+            <div class="app1">
+                <button @click="isWord=!isWord">切换状态</button>
+                <p v-if="isWord">true状态</p>
+                <p v-else>false状态</p>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app1",
+                    data: {
+                        isWord: true
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>v-if与template</h3>
+            <div class="app2">
+                <button @click="isWord=!isWord">切换状态</button>
+                <template v-if="isWord">
+                    <p>Yeah</p>
+                    <p>IsTrue</p>
+                </template>
+                <template v-else>
+                    <p>No</p>
+                    <p>IsFalse</p>
+                </template>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app2",
+                    data: {
+                        isWord: true
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>v-if与v-else-if</h3>
+            <div class="app3">
+                <button @click="isWord==3?isWord=1:isWord++">切换状态</button>
+                <p v-if="isWord==1">This is 1</p>
+                <p v-else-if="isWord==2">This is 2</p>
+                <p v-else>This is 3</p>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app3",
+                    data: {
+                        isWord: 1
+                    }
+                })
+            </script>
+        </div>
+        <div class="showMsg">
+            <h3>v-if与key</h3>
+            <div class="app4">
+                <p>不使用key</p>
+                <template v-if="isWord == true">
+                    <label>Username</label>
+                    <input placeholder="Enter your username">
+                </template>
+                <template v-else>
+                    <label>Email</label>
+                    <input placeholder="Enter your email address">
+                </template>
+                <button @click="isWord=!isWord">切换状态</button>
+            </div>
+            <div class="app5">
+                <p>使用key</p>
+                <template v-if="isWord == true">
+                    <label>Username</label>
+                    <input placeholder="Enter your username" key="username-input">
+                </template>
+                <template v-else>
+                    <label>Email</label>
+                    <input placeholder="Enter your email address" key="email-input">
+                </template>
+                <button @click="isWord=!isWord">切换状态</button>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app4",
+                    data: {
+                        isWord: true
+                    }
+                })
+                new Vue({
+                    el: ".app5",
+                    data: {
+                        isWord: true
+                    }
+                })
+            </script>
+            <!-- 不用key时，会保留缓存，不重新渲染，使用key时，将重新渲染 -->
+        </div>
+    </div>
+    <h2>v-show</h2>
+    <div class="block">
+        <div class="showMsg">
+            <h3>v-show</h3>
+            <div class="app6">
+                <p v-show="isWord">This is true</p>
+                <button @click="isWord=!isWord">切换状态</button>
+            </div>
+            <script>
+                new Vue({
+                    el: ".app6",
+                    data: {
+                        isWord: true
+                    }
+                })
+            </script>
+            <!-- v-show只是简单的display隐藏，没有else
+                另外，v-if是真正的条件渲染，只有被触发真或假，才会渲染对应的块，而v-show从一开始就会全部渲染
+                因此，v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销
+                如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好 -->
+        </div>
+    </div>
+    <h2>v-if与v-for</h2>
+    <!-- v-for 具有比 v-if 更高的优先级,不推荐一起使用 -->
+</body>
+
+</html>
